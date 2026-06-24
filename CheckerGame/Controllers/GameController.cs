@@ -1,4 +1,5 @@
 ﻿using CheckerGame.Data;
+using CheckerGame.DTOs;
 using CheckerGame.Models;
 using CheckerGame.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,26 @@ namespace CheckerGame.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateGame([FromBody] GameState gameState)
+        public async Task<IActionResult> CreateGame([FromBody] GameDto gameDto)
         {
+            var gameState = new GameState
+            {
+                Board = gameDto.Board,
+                CurrentTurnPlayerId = gameDto.CurrentTurnPlayerId,
+                IsFinished = gameDto.IsFinished
+            };
+
             var createdGame = await _gameService.CreateGame(gameState);
-            return Ok(createdGame);
+
+            var response = new GameDto
+            {
+                Id = createdGame.Id,
+                Board = createdGame.Board,
+                CurrentTurnPlayerId= createdGame.CurrentTurnPlayerId,
+                IsFinished = createdGame.IsFinished
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -28,14 +45,33 @@ namespace CheckerGame.Controllers
         {
             var game = await _gameService.GetGame(id);
             if (game == null) return NotFound();
-            return Ok(game);
+
+            var response = new GameDto
+            {
+                Id = game.Id,
+                Board = game.Board,
+                CurrentTurnPlayerId = game.CurrentTurnPlayerId,
+                IsFinished = game.IsFinished
+            };
+
+            return Ok(response);
         }
 
         [HttpPost("move")]
-        public async Task<IActionResult> MakeMove(int gameId, int fromX, int fromY, int toX, int toY)
+        public async Task<IActionResult> MakeMove(MoveRequestDto moveReqDto)
         {
-            var updatedGame = await _gameService.ProcessMove(gameId, fromX, fromY, toX, toY);
+            var updatedGame = await _gameService.ProcessMove(
+                moveReqDto.GameId, moveReqDto.FromX, moveReqDto.FromY, moveReqDto.ToX, moveReqDto.ToY);
             if (updatedGame == null) return BadRequest("Invalid Move");
+
+            var response = new GameDto
+            {
+                Id = updatedGame.Id,
+                Board = updatedGame.Board,
+                CurrentTurnPlayerId = updatedGame.CurrentTurnPlayerId,
+                IsFinished = updatedGame.IsFinished
+            };
+
             return Ok(updatedGame);
         }
 
