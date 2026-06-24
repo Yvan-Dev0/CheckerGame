@@ -1,4 +1,5 @@
 using CheckerGame.Data;
+using CheckerGame.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<GameDBContext>(options =>
 
 var app = builder.Build();
 
+app.MapHub<GameHub>("/gamehub");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
