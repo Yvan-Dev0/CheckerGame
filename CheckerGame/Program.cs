@@ -1,5 +1,7 @@
 using CheckerGame.Data;
 using CheckerGame.Hubs;
+using CheckerGame.Mappings;
+using Mapster;
 using CheckerGame.Repositories;
 using CheckerGame.Services;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,10 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
+
+// Register Mapster
+MappingConfig.RegisterMappings();
+builder.Services.AddMapster();
 
 var app = builder.Build();
 
