@@ -1,39 +1,38 @@
 ﻿using CheckerGame.Data;
 using CheckerGame.Models;
+using CheckerGame.Repositories;
 
 namespace CheckerGame.Services
 {
     public class GameService : IGameService
     {
-        private readonly GameDBContex _context;
+        private readonly IGameRepository _gameRepository;
 
-        public GameService(GameDBContex context)
+        public GameService(IGameRepository gameRepository)
         {
-            _context = context;
+            _gameRepository = gameRepository;
         }
 
         public async Task<GameState> CreateGame(GameState gameState)
         {
-            _context.Games.Add(gameState);
-            await _context.SaveChangesAsync();
-            return gameState;
+            return await _gameRepository.AddGameAsync(gameState);
         }
 
         public async Task<GameState?> GetGame(int id)
         {
-            return await _context.Games.FindAsync(id);
+            return await _gameRepository.GetGameAsync(id);
         }
 
         public async Task<GameState?> ProcessMove(int gameId, int fromX, int fromY, int toX, int toY)
         {
-            var game = await _context.Games.FindAsync(gameId);
+            var game = await _gameRepository.GetGameAsync(gameId);
             if (game == null) return null;
 
             if (!ValidateMove(game, fromX, fromY, toX, toY))
                 return null;
 
             ApplyMove(game, fromX, fromY, toX, toY);
-            await _context.SaveChangesAsync();
+            await _gameRepository.SaveChangesAsync();
             return game;
         }
 
