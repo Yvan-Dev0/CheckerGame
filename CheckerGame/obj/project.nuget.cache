@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "UZVxmXWyK0w=",
+  "success": true,
+  "projectFilePath": "C:\\Yvan\\Game\\CheckerGame\\CheckerGame\\CheckerGame.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Yvan Maribbay\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.1\\microsoft.aspnetcore.openapi.9.0.1.nupkg.sha512",
+    "C:\\Users\\Yvan Maribbay\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
