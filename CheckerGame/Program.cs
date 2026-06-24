@@ -5,12 +5,24 @@ using Mapster;
 using CheckerGame.Repositories;
 using CheckerGame.Services;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using CheckerGame.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+// FluentValidation Registration
+builder.Services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssemblyContaining<GameDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<MoveRequestDtoValidator>();
+
+// Register Validators from Assembly
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();

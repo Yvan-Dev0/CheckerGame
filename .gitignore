@@ -1,16 +1,12 @@
-# Visual Studio cache
-.vs/
+# Visual Studio user files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # Build results
 bin/
 obj/
 
-# User-specific files
-*.user
-*.suo
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
+# Visual Studio cache
+.vs/
