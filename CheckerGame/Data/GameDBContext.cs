@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CheckerGame.Data
 {
-    public class GameDBContext(DbContextOptions<DbContext> options) : DbContext(options)
+    public class GameDBContex : DbContext
     {
+        public GameDBContex(DbContextOptions<GameDBContex> options) : base(options) {}
+
         public DbSet<Player> Players { get; set; }
         public DbSet<GameState> Games { get; set; }
     }

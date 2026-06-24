@@ -6,9 +6,14 @@ namespace CheckerGame.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GameController(GameDBContext context) : ControllerBase
+    public class GameController : ControllerBase
     {
-        private readonly GameDBContext _context = context;
+        private readonly GameDBContex _context;
+
+        public GameController(GameDBContex contex)
+        {
+            _context = contex;
+        }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateGame([FromBody] GameState gameState)

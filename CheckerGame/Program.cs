@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // Register DB Connection String
-builder.Services.AddDbContext<GameDBContext>(options =>
+builder.Services.AddDbContext<GameDBContex>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
