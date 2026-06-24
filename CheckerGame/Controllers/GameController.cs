@@ -9,25 +9,24 @@ namespace CheckerGame.Controllers
     [Route("api/[controller]")]
     public class GameController : ControllerBase
     {
-        private readonly GameDBContex _context;
+       private readonly IGameService _gameService;
 
-        public GameController(GameDBContex contex)
+        public GameController(IGameService gameService)
         {
-            _context = contex;
+            _gameService = gameService;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateGame([FromBody] GameState gameState)
         {
-            _context.Games.Add(gameState);
-            await _context.SaveChangesAsync();
-            return Ok(gameState);
+            var createdGame = await _gameService.CreateGame(gameState);
+            return Ok(createdGame);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetGame(int id)
         {
-            var game = await _context.Games.FindAsync(id);
+            var game = await _gameService.GetGame(id);
             if (game == null) return NotFound();
             return Ok(game);
         }
@@ -35,19 +34,8 @@ namespace CheckerGame.Controllers
         [HttpPost("move")]
         public async Task<IActionResult> MakeMove(int gameId, int fromX, int fromY, int toX, int toY)
         {
-            var game = await _context.Games.FindAsync(gameId);
-
-            if (game == null ) return NotFound();
-
-            var service = new GameService(_context);
-
-            if (!await service.ValidateMove(game, fromX, fromY, toX, toY))
-            {
-                return BadRequest("Invalid Move");
-            }
-
-            var updatedGame = await service.ApplyMove(game, fromX, fromY, toX, toY);
-
+            var updatedGame = await _gameService.ProcessMove(gameId, fromX, fromY, toX, toY);
+            if (updatedGame == null) return BadRequest("Invalid Move");
             return Ok(updatedGame);
         }
 
