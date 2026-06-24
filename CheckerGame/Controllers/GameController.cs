@@ -1,5 +1,5 @@
-﻿using CheckerGame.Data;
-using CheckerGame.DTOs;
+﻿using CheckerGame.DTOs;
+using Mapster;
 using CheckerGame.Models;
 using CheckerGame.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,24 +20,9 @@ namespace CheckerGame.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateGame([FromBody] GameDto gameDto)
         {
-            var gameState = new GameState
-            {
-                Board = gameDto.Board,
-                CurrentTurnPlayerId = gameDto.CurrentTurnPlayerId,
-                IsFinished = gameDto.IsFinished
-            };
-
+            var gameState = gameDto.Adapt<GameState>();
             var createdGame = await _gameService.CreateGame(gameState);
-
-            var response = new GameDto
-            {
-                Id = createdGame.Id,
-                Board = createdGame.Board,
-                CurrentTurnPlayerId= createdGame.CurrentTurnPlayerId,
-                IsFinished = createdGame.IsFinished
-            };
-
-            return Ok(response);
+            return Ok(createdGame.Adapt<GameDto>());
         }
 
         [HttpGet("{id}")]
@@ -45,16 +30,7 @@ namespace CheckerGame.Controllers
         {
             var game = await _gameService.GetGame(id);
             if (game == null) return NotFound();
-
-            var response = new GameDto
-            {
-                Id = game.Id,
-                Board = game.Board,
-                CurrentTurnPlayerId = game.CurrentTurnPlayerId,
-                IsFinished = game.IsFinished
-            };
-
-            return Ok(response);
+            return Ok(game.Adapt<GameDto>());
         }
 
         [HttpPost("move")]
@@ -64,15 +40,7 @@ namespace CheckerGame.Controllers
                 moveReqDto.GameId, moveReqDto.FromX, moveReqDto.FromY, moveReqDto.ToX, moveReqDto.ToY);
             if (updatedGame == null) return BadRequest("Invalid Move");
 
-            var response = new GameDto
-            {
-                Id = updatedGame.Id,
-                Board = updatedGame.Board,
-                CurrentTurnPlayerId = updatedGame.CurrentTurnPlayerId,
-                IsFinished = updatedGame.IsFinished
-            };
-
-            return Ok(updatedGame);
+            return Ok(updatedGame.Adapt<GameDto>());
         }
 
     }
