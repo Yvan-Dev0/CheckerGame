@@ -20,6 +20,7 @@ builder.Services.AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<GameDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<MoveRequestDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<PlayerDtoValidator>();
 
 // Register Validators from Assembly
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
