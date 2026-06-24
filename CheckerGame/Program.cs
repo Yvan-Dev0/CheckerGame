@@ -18,6 +18,8 @@ builder.Services.AddOpenApi();
 // FluentValidation Registration
 builder.Services.AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();
+
+// Register all Validators
 builder.Services.AddValidatorsFromAssemblyContaining<GameDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<MoveRequestDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<PlayerDtoValidator>();
@@ -47,7 +49,8 @@ builder.Services.AddMapster();
 
 var app = builder.Build();
 
-app.MapHub<GameHub>("/gamehub");
+// Custom error handling middleware
+app.UseMiddleware<CheckerGame.Middleware.ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -61,5 +64,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<GameHub>("/gamehub");
 
 app.Run();
