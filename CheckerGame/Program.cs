@@ -1,5 +1,6 @@
 using CheckerGame.Data;
 using CheckerGame.Hubs;
+using CheckerGame.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,9 @@ builder.Services.AddDbContext<GameDBContex>(options =>
 
 // Register SignalR
 builder.Services.AddSignalR();
+
+// DI Registration
+builder.Services.AddScoped<IGameService, GameService>();
 
 var app = builder.Build();
 
