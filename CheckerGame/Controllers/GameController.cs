@@ -3,6 +3,8 @@ using Mapster;
 using CheckerGame.Models;
 using CheckerGame.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using CheckerGame.Hubs;
 
 namespace CheckerGame.Controllers
 {
@@ -12,11 +14,16 @@ namespace CheckerGame.Controllers
     {
         private readonly IGameService _gameService;
         private readonly ILogger<GameController> _logger;
+        public readonly IHubContext<GameHub> _hubContext;
 
-        public GameController(IGameService gameService, ILogger<GameController> logger)
+        public GameController(
+            IGameService gameService, 
+            ILogger<GameController> logger, 
+            IHubContext<GameHub> hubContext)
         {
             _gameService = gameService;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         [HttpPost("create")]
@@ -66,7 +73,16 @@ namespace CheckerGame.Controllers
             _logger.LogInformation(
                 "Move applied successfully in GameId {GameId}: ({FromX}, {FromY} -> {ToX}, {ToY})",
                 moveReqDto.GameId, moveReqDto.FromX, moveReqDto.FromY, moveReqDto.ToX, moveReqDto.ToY
-                );    
+                );
+
+            await _hubContext.Clients.Group(moveReqDto.GameId.ToString()).SendAsync("GameUpdated", new
+            {
+                fromX = moveReqDto.FromX,
+                fromY = moveReqDto.FromY,
+                toX = moveReqDto.ToX,
+                toY = moveReqDto.ToY,
+                currentTurnPlayerId = updatedGame.CurrentTurnPlayerId
+            });
 
             return Ok(updatedGame.Adapt<GameDto>());
         }
