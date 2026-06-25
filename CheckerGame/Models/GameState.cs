@@ -6,5 +6,7 @@
         public string Board { get; set; } = string.Empty; //JSON representation of board
         public int CurrentTurnPlayerId { get; set; }
         public bool IsFinished { get; set; }
+        public int? Player1Id { get; set; }
+        public int? Player2Id { get; set; }
     }
 }

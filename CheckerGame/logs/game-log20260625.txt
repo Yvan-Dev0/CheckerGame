@@ -297,3 +297,25 @@ Error Number:4060,State:1,Class:11
 2026-06-25 11:45:22.951 -07:00 [INF] Executed action CheckerGame.Controllers.GameController.MakeMove (CheckerGame) in 77.6588ms
 2026-06-25 11:45:22.953 -07:00 [INF] Executed endpoint 'CheckerGame.Controllers.GameController.MakeMove (CheckerGame)'
 2026-06-25 11:45:22.954 -07:00 [INF] Request finished HTTP/2 POST https://localhost:7259/api/Game/move - 400 null application/problem+json; charset=utf-8 89.143ms
+2026-06-25 13:36:49.318 -07:00 [INF] Now listening on: https://localhost:7259
+2026-06-25 13:36:49.343 -07:00 [INF] Now listening on: http://localhost:5122
+2026-06-25 13:36:49.393 -07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-25 13:36:49.397 -07:00 [INF] Hosting environment: Development
+2026-06-25 13:36:49.397 -07:00 [INF] Content root path: C:\Yvan\Game\CheckerGame\CheckerGame
+2026-06-25 13:36:50.241 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/_framework/aspnetcore-browser-refresh.js - null null
+2026-06-25 13:36:50.241 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/_vs/browserLink - null null
+2026-06-25 13:36:50.279 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/_framework/aspnetcore-browser-refresh.js - 200 13774 application/javascript; charset=utf-8 49.7164ms
+2026-06-25 13:36:50.322 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/_vs/browserLink - 200 null text/javascript; charset=UTF-8 95.3571ms
+2026-06-25 13:36:50.356 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - null null
+2026-06-25 13:36:50.436 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 80.8217ms
+2026-06-25 14:05:00.357 -07:00 [INF] Now listening on: https://localhost:7259
+2026-06-25 14:05:00.384 -07:00 [INF] Now listening on: http://localhost:5122
+2026-06-25 14:05:00.454 -07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-25 14:05:00.455 -07:00 [INF] Hosting environment: Development
+2026-06-25 14:05:00.456 -07:00 [INF] Content root path: C:\Yvan\Game\CheckerGame\CheckerGame
+2026-06-25 14:05:00.887 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/_vs/browserLink - null null
+2026-06-25 14:05:00.887 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/_framework/aspnetcore-browser-refresh.js - null null
+2026-06-25 14:05:00.965 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/_framework/aspnetcore-browser-refresh.js - 200 13774 application/javascript; charset=utf-8 92.6629ms
+2026-06-25 14:05:00.998 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/_vs/browserLink - 200 null text/javascript; charset=UTF-8 127.6155ms
+2026-06-25 14:05:01.025 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - null null
+2026-06-25 14:05:01.100 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 75.6415ms
