@@ -10,6 +10,9 @@ using Serilog;
 using CheckerGame.Repositories.Game;
 using CheckerGame.Services.Game;
 using CheckerGame.Repositories.PlayerRepo;
+using CheckerGame.Repositories.Auth;
+using CheckerGame.Services.Leaderboard;
+using CheckerGame.Services.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,10 +51,16 @@ builder.Services.AddDbContext<GameDBContex>(options =>
 // Register SignalR
 builder.Services.AddSignalR();
 
-// DI Registration
+// Repository DI Registration
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
+// Services DI Registration
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Register Mapster
 MappingConfig.RegisterMappings();
