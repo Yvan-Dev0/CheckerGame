@@ -13,6 +13,8 @@ using CheckerGame.Repositories.PlayerRepo;
 using CheckerGame.Repositories.Auth;
 using CheckerGame.Services.Leaderboard;
 using CheckerGame.Services.Auth;
+using CheckerGame.Repositories.UnitWork;
+using CheckerGame.Repositories.Leaderboard;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,10 +54,11 @@ builder.Services.AddDbContext<GameDBContex>(options =>
 builder.Services.AddSignalR();
 
 // Repository DI Registration
-builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
 
 // Services DI Registration
 builder.Services.AddScoped<IGameService, GameService>();

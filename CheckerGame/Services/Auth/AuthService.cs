@@ -1,5 +1,4 @@
 ﻿using CheckerGame.Models;
-using CheckerGame.Repositories.Auth;
 using CheckerGame.Repositories.UnitWork;
 
 namespace CheckerGame.Services.Auth
