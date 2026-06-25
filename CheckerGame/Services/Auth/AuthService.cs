@@ -1,23 +1,24 @@
 ﻿using CheckerGame.Models;
 using CheckerGame.Repositories.Auth;
+using CheckerGame.Repositories.UnitWork;
 
 namespace CheckerGame.Services.Auth
 {
     public class AuthService : IAuthService
     {
-        private readonly IAuthRepository _authRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<AuthService> _logger;
 
-        public AuthService(IAuthRepository authRepository, ILogger<AuthService> logger)
+        public AuthService(IUnitOfWork unitOfWork, ILogger<AuthService> logger)
         {
-            _authRepository = authRepository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
         public async Task<Player?> LoginAsync(string username, string password)
         {
             _logger.LogInformation("Login attempt for {Username}", username);
-            var valid = await _authRepository.ValidateCredentialsAsync(username, password);
+            var valid = await _unitOfWork.Auth.ValidateCredentialsAsync(username, password);
 
             if (!valid)
             {
@@ -25,14 +26,17 @@ namespace CheckerGame.Services.Auth
                 return null;
             }
 
-            return await _authRepository.GetPlayerByUsernameAsync(username);
+            return await _unitOfWork.Auth.GetPlayerByUsernameAsync(username);
 
         }
 
         public async Task<Player> RegisterAsync(Player player, string password)
         {
             _logger.LogInformation("Registering new player {Username}", player.Username);
-            return await _authRepository.RegisterAsync(player, password);
+            var regitered = await _unitOfWork.Auth.RegisterAsync(player, password);
+
+            await _unitOfWork.CompleteAsync();
+            return regitered;
         }
     }
 }

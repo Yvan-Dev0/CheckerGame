@@ -1,30 +1,31 @@
-﻿using CheckerGame.Data;
-using CheckerGame.Models;
-using CheckerGame.Repositories.Game;
+﻿using CheckerGame.Models;
+using CheckerGame.Repositories.UnitWork;
 
 namespace CheckerGame.Services.Game
 {
     public class GameService : IGameService
     {
-        private readonly IGameRepository _gameRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<GameService> _logger;
 
-        public GameService(IGameRepository gameRepository, ILogger<GameService> logger)
+        public GameService(IUnitOfWork unitOfWork, ILogger<GameService> logger)
         {
-            _gameRepository = gameRepository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
         public async Task<GameState> CreateGame(GameState gameState)
         {
-            var created = await _gameRepository.AddGameAsync(gameState);
+            var created = await _unitOfWork.Games.AddGameAsync(gameState);
             _logger.LogInformation("Game {GameId} created with initial board state", created.Id);
+
+            await _unitOfWork.CompleteAsync();
             return created;
         }
 
         public async Task<GameState?> GetGame(int id)
         {
-            var game = await _gameRepository.GetGameAsync(id);
+            var game = await _unitOfWork.Games.GetGameAsync(id);
             if (game == null)
             {
                 _logger.LogWarning("Game {GameId} not found", id);
@@ -39,7 +40,7 @@ namespace CheckerGame.Services.Game
 
         public async Task<GameState?> ProcessMove(int gameId, int fromX, int fromY, int toX, int toY)
         {
-            var game = await _gameRepository.GetGameAsync(gameId);
+            var game = await _unitOfWork.Games.GetGameAsync(gameId);
             if (game == null)
             {
                 _logger.LogWarning("Move attended on non-existent game {GameId}", gameId);
@@ -55,7 +56,7 @@ namespace CheckerGame.Services.Game
             }
 
             ApplyMove(game, fromX, fromY, toX, toY);
-            await _gameRepository.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
 
             _logger.LogInformation("Move applied in game {GameId}: ({FromX}, {FromY} -> {ToX}, {ToY}). Next turn: Player {PlayerId}",
                 gameId, fromX, fromY, toX, toY, game.CurrentTurnPlayerId);
