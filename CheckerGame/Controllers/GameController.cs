@@ -10,35 +10,63 @@ namespace CheckerGame.Controllers
     [Route("api/[controller]")]
     public class GameController : ControllerBase
     {
-       private readonly IGameService _gameService;
+        private readonly IGameService _gameService;
+        private readonly ILogger<GameController> _logger;
 
-        public GameController(IGameService gameService)
+        public GameController(IGameService gameService, ILogger<GameController> logger)
         {
             _gameService = gameService;
+            _logger = logger;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateGame([FromBody] GameDto gameDto)
         {
-            var gameState = gameDto.Adapt<GameState>();
-            var createdGame = await _gameService.CreateGame(gameState);
+            _logger.LogInformation("CreateGame request received");
+            var createdGame = await _gameService.CreateGame(gameDto.Adapt<GameState>());
             return Ok(createdGame.Adapt<GameDto>());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGame(int id)
         {
+            _logger.LogInformation("GetGame request received for GameId {GameId}", id);
+            
             var game = await _gameService.GetGame(id);
-            if (game == null) return NotFound();
+            if (game == null)
+            {
+                _logger.LogWarning("Game {GameId} not found", id);
+                return NotFound();
+            }
+
+            _logger.LogInformation("Game {GameId} successfully retrieved", id);
             return Ok(game.Adapt<GameDto>());
         }
 
         [HttpPost("move")]
         public async Task<IActionResult> MakeMove(MoveRequestDto moveReqDto)
         {
+            _logger.LogInformation(
+                "Move request received for GameId {GameId}: ({FromX}, {FromY} -> {ToX}, {ToY})",
+                moveReqDto.GameId, moveReqDto.FromX, moveReqDto.FromY, moveReqDto.ToX, moveReqDto.ToY
+                );
+
             var updatedGame = await _gameService.ProcessMove(
                 moveReqDto.GameId, moveReqDto.FromX, moveReqDto.FromY, moveReqDto.ToX, moveReqDto.ToY);
-            if (updatedGame == null) return BadRequest("Invalid Move");
+
+            if (updatedGame == null)
+            {
+                _logger.LogWarning(
+                    "Invalid move attempted in GameId {GameId}: ({FromX}, {FromY} -> {ToX}, {ToY})",
+                    moveReqDto.GameId, moveReqDto.FromX, moveReqDto.FromY, moveReqDto.ToX, moveReqDto.ToY
+                    );
+                return BadRequest("Invalid Move");
+            }
+
+            _logger.LogInformation(
+                "Move applied successfully in GameId {GameId}: ({FromX}, {FromY} -> {ToX}, {ToY})",
+                moveReqDto.GameId, moveReqDto.FromX, moveReqDto.FromY, moveReqDto.ToX, moveReqDto.ToY
+                );    
 
             return Ok(updatedGame.Adapt<GameDto>());
         }
