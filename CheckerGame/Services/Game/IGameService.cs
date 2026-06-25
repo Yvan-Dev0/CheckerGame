@@ -1,6 +1,6 @@
 ﻿using CheckerGame.Models;
 
-namespace CheckerGame.Services
+namespace CheckerGame.Services.Game
 {
     public interface IGameService
     {

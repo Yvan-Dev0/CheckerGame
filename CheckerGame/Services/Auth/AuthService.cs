@@ -1,7 +1,7 @@
 ﻿using CheckerGame.Models;
-using CheckerGame.Repositories;
+using CheckerGame.Repositories.Auth;
 
-namespace CheckerGame.Services
+namespace CheckerGame.Services.Auth
 {
     public class AuthService : IAuthService
     {

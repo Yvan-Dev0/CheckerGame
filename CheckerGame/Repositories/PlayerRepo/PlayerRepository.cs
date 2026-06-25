@@ -1,7 +1,7 @@
 ﻿using CheckerGame.Data;
 using CheckerGame.Models;
 
-namespace CheckerGame.Repositories
+namespace CheckerGame.Repositories.PlayerRepo
 {
     public class PlayerRepository : IPlayerRepository
     {

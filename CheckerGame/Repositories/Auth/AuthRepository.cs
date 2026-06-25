@@ -3,7 +3,7 @@ using CheckerGame.Helper;
 using CheckerGame.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CheckerGame.Repositories
+namespace CheckerGame.Repositories.Auth
 {
     public class AuthRepository : IAuthRepository
     {

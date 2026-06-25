@@ -1,6 +1,6 @@
 ﻿using CheckerGame.Models;
 
-namespace CheckerGame.Repositories
+namespace CheckerGame.Repositories.PlayerRepo
 {
     public interface IPlayerRepository
     {

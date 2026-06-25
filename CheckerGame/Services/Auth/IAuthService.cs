@@ -1,6 +1,6 @@
 ﻿using CheckerGame.Models;
 
-namespace CheckerGame.Services
+namespace CheckerGame.Services.Auth
 {
     public interface IAuthService
     {

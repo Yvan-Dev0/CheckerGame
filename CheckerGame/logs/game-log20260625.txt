@@ -16,3 +16,14 @@
 2026-06-25 09:14:00.138 -07:00 [INF] Executed action CheckerGame.Controllers.GameController.MakeMove (CheckerGame) in 207.754ms
 2026-06-25 09:14:00.138 -07:00 [INF] Executed endpoint 'CheckerGame.Controllers.GameController.MakeMove (CheckerGame)'
 2026-06-25 09:14:00.140 -07:00 [INF] Request finished HTTP/2 POST https://localhost:7259/api/Game/move - 400 null application/problem+json; charset=utf-8 256.0378ms
+2026-06-25 11:04:48.456 -07:00 [INF] Now listening on: https://localhost:7259
+2026-06-25 11:04:48.493 -07:00 [INF] Now listening on: http://localhost:5122
+2026-06-25 11:04:48.579 -07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-25 11:04:48.581 -07:00 [INF] Hosting environment: Development
+2026-06-25 11:04:48.582 -07:00 [INF] Content root path: C:\Yvan\Game\CheckerGame\CheckerGame
+2026-06-25 11:04:49.306 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/_vs/browserLink - null null
+2026-06-25 11:04:49.306 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/_framework/aspnetcore-browser-refresh.js - null null
+2026-06-25 11:04:49.349 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/_framework/aspnetcore-browser-refresh.js - 200 13774 application/javascript; charset=utf-8 53.4818ms
+2026-06-25 11:04:49.401 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/_vs/browserLink - 200 null text/javascript; charset=UTF-8 108.2541ms
+2026-06-25 11:04:49.431 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - null null
+2026-06-25 11:04:49.568 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 137.3257ms

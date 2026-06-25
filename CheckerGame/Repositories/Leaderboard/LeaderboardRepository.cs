@@ -2,7 +2,7 @@
 using CheckerGame.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CheckerGame.Repositories
+namespace CheckerGame.Repositories.Leaderboard
 {
     public class LeaderboardRepository : ILeaderboardRepository
     {

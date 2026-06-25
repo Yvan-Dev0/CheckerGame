@@ -1,8 +1,8 @@
 ﻿using CheckerGame.Data;
 using CheckerGame.Models;
-using CheckerGame.Repositories;
+using CheckerGame.Repositories.Game;
 
-namespace CheckerGame.Services
+namespace CheckerGame.Services.Game
 {
     public class GameService : IGameService
     {
@@ -44,8 +44,8 @@ namespace CheckerGame.Services
             {
                 _logger.LogWarning("Move attended on non-existent game {GameId}", gameId);
                 return null;
-            }   
-                
+            }
+
 
             if (!ValidateMove(game, fromX, fromY, toX, toY))
             {
@@ -53,7 +53,7 @@ namespace CheckerGame.Services
                     gameId, fromX, fromY, toX, toY);
                 return null;
             }
-                
+
             ApplyMove(game, fromX, fromY, toX, toY);
             await _gameRepository.SaveChangesAsync();
 
@@ -105,7 +105,7 @@ namespace CheckerGame.Services
                 board[toX, toY] = 3;
 
             game.Board = System.Text.Json.JsonSerializer.Serialize(board);
-            game.CurrentTurnPlayerId = (game.CurrentTurnPlayerId == 1) ? 2 : 1;
+            game.CurrentTurnPlayerId = game.CurrentTurnPlayerId == 1 ? 2 : 1;
         }
     }
 }

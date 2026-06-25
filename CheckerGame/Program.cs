@@ -2,13 +2,14 @@ using CheckerGame.Data;
 using CheckerGame.Hubs;
 using CheckerGame.Mappings;
 using Mapster;
-using CheckerGame.Repositories;
-using CheckerGame.Services;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using CheckerGame.Validators;
 using Serilog;
+using CheckerGame.Repositories.Game;
+using CheckerGame.Services.Game;
+using CheckerGame.Repositories.PlayerRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 

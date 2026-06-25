@@ -1,6 +1,6 @@
 ﻿using CheckerGame.Models;
 
-namespace CheckerGame.Services
+namespace CheckerGame.Services.Leaderboard
 {
     public interface ILeaderboardService
     {

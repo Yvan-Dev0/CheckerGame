@@ -1,7 +1,7 @@
 ﻿using CheckerGame.Models;
-using CheckerGame.Repositories;
+using CheckerGame.Repositories.Leaderboard;
 
-namespace CheckerGame.Services
+namespace CheckerGame.Services.Leaderboard
 {
     public class LeaderboardService : ILeaderboardService
     {

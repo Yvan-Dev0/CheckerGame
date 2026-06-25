@@ -1,10 +1,10 @@
 ﻿using CheckerGame.DTOs;
 using Mapster;
 using CheckerGame.Models;
-using CheckerGame.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using CheckerGame.Hubs;
+using CheckerGame.Services.Game;
 
 namespace CheckerGame.Controllers
 {
