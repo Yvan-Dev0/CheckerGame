@@ -319,3 +319,14 @@ Error Number:4060,State:1,Class:11
 2026-06-25 14:05:00.998 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/_vs/browserLink - 200 null text/javascript; charset=UTF-8 127.6155ms
 2026-06-25 14:05:01.025 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - null null
 2026-06-25 14:05:01.100 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 75.6415ms
+2026-06-25 14:22:10.960 -07:00 [INF] Now listening on: https://localhost:7259
+2026-06-25 14:22:10.985 -07:00 [INF] Now listening on: http://localhost:5122
+2026-06-25 14:22:11.043 -07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-25 14:22:11.046 -07:00 [INF] Hosting environment: Development
+2026-06-25 14:22:11.046 -07:00 [INF] Content root path: C:\Yvan\Game\CheckerGame\CheckerGame
+2026-06-25 14:22:11.687 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/_framework/aspnetcore-browser-refresh.js - null null
+2026-06-25 14:22:11.687 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/_vs/browserLink - null null
+2026-06-25 14:22:11.736 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/_framework/aspnetcore-browser-refresh.js - 200 13774 application/javascript; charset=utf-8 61.3467ms
+2026-06-25 14:22:11.798 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/_vs/browserLink - 200 null text/javascript; charset=UTF-8 124.0049ms
+2026-06-25 14:22:11.827 -07:00 [INF] Request starting HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - null null
+2026-06-25 14:22:11.932 -07:00 [INF] Request finished HTTP/2 GET https://localhost:7259/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 104.8443ms
