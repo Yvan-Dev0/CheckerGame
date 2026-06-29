@@ -69,6 +69,16 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 MappingConfig.RegisterMappings();
 builder.Services.AddMapster();
 
+// Enable CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy => policy.WithOrigins("http://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials());
+});
+
 var app = builder.Build();
 
 // Custom error handling middleware
@@ -86,6 +96,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("AllowReactApp");
 
 app.MapHub<GameHub>("/gamehub");
 
