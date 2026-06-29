@@ -1,4 +1,5 @@
-﻿using CheckerGame.Models;
+﻿using System.Security.Claims;
+using CheckerGame.Models;
 using CheckerGame.Services.Game;
 using CheckerGame.Services.MatchMaking;
 using Microsoft.AspNetCore.SignalR;
@@ -20,17 +21,32 @@ namespace CheckerGame.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            _logger.LogInformation("Player connected: ConnectionId {ConnectionId}", Context.ConnectionId);
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                _logger.LogInformation("Player connected: {UserId}, with ConnectionId {ConnectionId}", userId, Context.ConnectionId);
+            }
+            else
+            {
+                _logger.LogWarning("Unauthenticated connection attempt from ConnectionId {ConnectionId}", Context.ConnectionId);
+                Context.Abort();
+                return;
+            }
+
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var userId = Context.UserIdentifier;
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId != null)
             {
                 _matchmakingService.LeaveQueue(userId);
                 _logger.LogInformation("Player {UserId} disconnected and removed from queue.", userId);
+            }
+            else
+            {
+                _logger.LogWarning("Unauthenticated player disconnected: ConnectionId {ConnectionId}", Context.ConnectionId);
             }
 
             if (exception != null)
@@ -48,7 +64,14 @@ namespace CheckerGame.Hubs
 
         public async Task JoinMatchmaking()
         {
-            var userId = Context.UserIdentifier!;
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Unauthenticated user attempted to join matchmaking");
+                await Clients.Caller.SendAsync("Error", "You must be logged in to join matchmaking");
+                return;
+            }
+
             var connectionId = Context.ConnectionId;
 
             var result = _matchmakingService.JoinQueue(userId, connectionId);
@@ -80,21 +103,45 @@ namespace CheckerGame.Hubs
 
         public async Task JoinGame(int gameId)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, gameId.ToString());
-            _logger.LogInformation("ConnectionId {ConnectionId} joined GameId {GameId}", Context.ConnectionId, gameId);
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Unauthenticated user attempted to join game {GameId}", gameId);
+                await Clients.Caller.SendAsync("Error", "You must be logged in to join a game");
+                return;
+            }
 
-            await Clients.Group(gameId.ToString()).SendAsync("PlayerJoined", Context.ConnectionId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, gameId.ToString());
+            _logger.LogInformation("Player {UserId} (ConnectionId {ConnectionId}) joined GameId {GameId}",
+                userId, Context.ConnectionId, gameId);
+
+            await Clients.Group(gameId.ToString()).SendAsync("PlayerJoined", userId);
         }
 
         public async Task LeaveGame(int gameId)
         {
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Unauthenticated user attempted to leave game {GameId}", gameId);
+                return;
+            }
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameId.ToString());
-            _logger.LogInformation("ConnectionId {ConnectionId} left GameId {GameId}", Context.ConnectionId, gameId);
+            _logger.LogInformation("Player {UserId} (ConnectionId {ConnectionId}) left GameId {GameId}",
+                userId, Context.ConnectionId, gameId);
         }
 
         public async Task PlayAgainstAI()
         {
-            var userId = Context.UserIdentifier!;
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Unauthenticated user attempted to play against AI");
+                await Clients.Caller.SendAsync("Error", "You must be logged in to play against AI");
+                return;
+            }
+
             var connectionId = Context.ConnectionId;
 
             var gameState = new GameState
@@ -102,7 +149,7 @@ namespace CheckerGame.Hubs
                 Board = InitializeBoard(),
                 CurrentTurnPlayerId = 1,
                 Player1Id = int.Parse(userId),
-                Player2Id = -1 
+                Player2Id = -1
             };
 
             var createdGame = await _gameService.CreateGame(gameState);
@@ -115,16 +162,25 @@ namespace CheckerGame.Hubs
 
         public async Task MakeMove(int gameId, int fromX, int fromY, int toX, int toY)
         {
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Unauthenticated user attempted to make a move in game {GameId}", gameId);
+                await Clients.Caller.SendAsync("Error", "You must be logged in to make a move");
+                return;
+            }
+
             var game = await _gameService.ProcessMove(gameId, fromX, fromY, toX, toY);
             if (game == null)
             {
-                _logger.LogWarning("Invalid move attempted in GameId {GameId}", gameId);
+                _logger.LogWarning("Invalid move attempted in GameId {GameId} by Player {UserId}", gameId, userId);
+                await Clients.Caller.SendAsync("Error", "Invalid move");
                 return;
             }
 
             _logger.LogInformation(
-                "Move broadcast in GameId {GameId} from ConnectionId {ConnectionId}: ({FromX},{FromY}) -> ({ToX},{ToY})",
-                gameId, Context.ConnectionId, fromX, fromY, toX, toY);
+                "Move broadcast in GameId {GameId} from Player {UserId} ({ConnectionId}): ({FromX},{FromY}) -> ({ToX},{ToY})",
+                gameId, userId, Context.ConnectionId, fromX, fromY, toX, toY);
 
             await Clients.Group(gameId.ToString()).SendAsync("GameUpdated", new
             {
@@ -132,7 +188,8 @@ namespace CheckerGame.Hubs
                 fromY,
                 toX,
                 toY,
-                currentTurnPlayerId = game.CurrentTurnPlayerId
+                currentTurnPlayerId = game.CurrentTurnPlayerId,
+                movedBy = userId
             });
         }
 
