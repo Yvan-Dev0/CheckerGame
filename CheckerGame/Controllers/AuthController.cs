@@ -1,8 +1,12 @@
-﻿using CheckerGame.DTOs;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using CheckerGame.DTOs;
 using CheckerGame.Models;
 using CheckerGame.Services.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CheckerGame.Controllers
 {
@@ -12,11 +16,13 @@ namespace CheckerGame.Controllers
     {
         private readonly IAuthService _authService;
         private readonly ILogger<AuthController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(IAuthService authService, ILogger<AuthController> logger)
+        public AuthController(IAuthService authService, ILogger<AuthController> logger, IConfiguration configuration)
         {
             _authService = authService;
             _logger = logger;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -44,7 +50,31 @@ namespace CheckerGame.Controllers
                 return Unauthorized("Invalid credentials");
             }
 
-            return Ok(new { player.Id, player.Username });
+            var token = GenerateJwtToken(player);
+
+            return Ok(new { player.Id, player.Username, Token = token });
+        }
+
+        private object GenerateJwtToken(Player player)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, player.Id.ToString()),
+                new Claim(ClaimTypes.Name, player.Username)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+            );
+        
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
